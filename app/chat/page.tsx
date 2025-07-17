@@ -51,9 +51,9 @@ export default function ChatPage() {
                   <p>Ask questions about your uploaded PDF documents</p>
                   <div className="mt-6 space-y-2 text-sm">
                     <p className="font-medium">Example questions:</p>
-                    <p>"What is the main topic of the document?"</p>
-                    <p>"Summarize the key points"</p>
-                    <p>"Find information about..."</p>
+                    <p>&quot;What is the main topic of the document?&quot;</p>
+                    <p>&quot;Summarize the key points&quot;</p>
+                    <p>&quot;Find information about...&quot;</p>
                   </div>
                 </div>
               ) : (
