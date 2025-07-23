@@ -8,6 +8,11 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 
+const allowedTypes = [
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 const index = pinecone.index(process.env.PINECONE_INDEX_NAME!);
 
 export async function POST(request: NextRequest) {
@@ -19,9 +24,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (file.type !== "application/pdf") {
+    if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: "Only PDF files are supported" },
+        { error: "Only PDF and DOCX files are supported" },
         { status: 400 }
       );
     }
@@ -30,11 +35,20 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     // ✅ Extract text from PDF using pdf-parse
-    const text = await extractTextFromPDF(buffer);
+    let text = "";
 
+    if (file.type === "application/pdf") {
+      text = await extractTextFromPDF(buffer);
+    } else if (
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      text = await extractTextFromDocx(buffer);
+    }
+    console.log(">>> text: ", text);
     // ✅ Split text into manageable chunks
     const chunks = splitTextIntoChunks(text, 1000);
-
+    console.log(">>> chunks: ", chunks);
     const vectors = [];
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
@@ -69,6 +83,12 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+async function extractTextFromDocx(buffer: Buffer): Promise<string> {
+  const mammoth = await import("mammoth");
+  const result = await mammoth.convertToHtml({ buffer });
+  return result.value.replace(/<[^>]+>/g, " "); // Strip HTML tags
 }
 
 // ✅ Uses pdf-parse to extract PDF text

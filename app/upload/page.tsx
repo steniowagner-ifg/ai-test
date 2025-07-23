@@ -148,7 +148,7 @@ export default function UploadPage() {
                 <input
                   type="file"
                   multiple
-                  accept=".pdf"
+                  accept=".pdf,.docx"
                   onChange={(e) =>
                     e.target.files && handleFileUpload(e.target.files)
                   }
@@ -165,8 +165,8 @@ export default function UploadPage() {
               <Alert className="mt-4">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Only PDF files are supported. Files will be processed and
-                  stored in your Pinecone database.
+                  Only PDF and Word (.docx) files are supported. Files will be
+                  processed and stored in your Pinecone database.
                 </AlertDescription>
               </Alert>
             </CardContent>
