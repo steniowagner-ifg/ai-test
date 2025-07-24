@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UploadDocuments } from "@/app/components";
+import { UploadDocuments, ListUploadedDocuments } from "@/app/components";
 
 export default function Page() {
   return (
@@ -13,7 +13,7 @@ export default function Page() {
           <UploadDocuments />
         </TabsContent>
         <TabsContent value="list-documents">
-          Change your password here.
+          <ListUploadedDocuments />
         </TabsContent>
       </Tabs>
     </div>

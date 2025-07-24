@@ -9,10 +9,10 @@ const assistant = pinecone.assistant(process.env.PINECONE_ASSISTANT_NAME!);
 
 export async function GET() {
   try {
-    const files = await assistant.listFiles();
+    const { files } = await assistant.listFiles();
     return NextResponse.json(
       {
-        files,
+        files: files ?? [],
       },
       {
         status: 200,
