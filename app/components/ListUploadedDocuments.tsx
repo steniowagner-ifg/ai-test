@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
+import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,24 +15,45 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { DeleteDocumentButton } from "./DeleteDocumentButton";
 import { useFetch } from "../hooks/use-fetch";
 import { UploadedFile } from "../types";
 import { Spinner } from "./Spinner";
 
 export function ListUploadedDocuments() {
+  const [uploadedDocuments, setUploadedDocuments] = useState<UploadedFile[]>(
+    []
+  );
+
   const { fetch, data, isLoading, hasError } = useFetch<{
     files: UploadedFile[];
   }>("/list-documents");
+
+  const handleDeleteDocument = useCallback(async (file: UploadedFile) => {
+    toast.success("File deleted successfully.");
+    setUploadedDocuments((previousUploadedDocuments) =>
+      previousUploadedDocuments.filter(
+        (previousUploadedDocument) => previousUploadedDocument.id !== file.id
+      )
+    );
+  }, []);
 
   useEffect(() => {
     fetch();
   }, []);
 
-  toast.error("Oops...", {
-    description: "Something went wrong while listing the uploaded documents.",
-  });
+  useEffect(() => {
+    if (data?.files.length) {
+      setUploadedDocuments(data.files);
+    }
+  }, [data]);
+
   useEffect(() => {
     if (hasError) {
+      toast.error("Oops...", {
+        description:
+          "Something went wrong while listing the uploaded documents.",
+      });
     }
   }, [hasError]);
 
@@ -60,7 +83,7 @@ export function ListUploadedDocuments() {
           </TableHeader>
           <TableBody>
             {!isLoading &&
-              data?.files.map((file) => (
+              uploadedDocuments.map((file) => (
                 <TableRow key={file.id}>
                   <TableCell className="font-medium">{file.name}</TableCell>
                   <TableCell>
@@ -69,7 +92,17 @@ export function ListUploadedDocuments() {
                       "dd/MM/yyyy HH:mm"
                     )}
                   </TableCell>
-                  <TableCell className="text-right">$250.00</TableCell>
+                  <TableCell className="flex items-center justify-end">
+                    <div className="self-end flex flex gap-2">
+                      <DeleteDocumentButton
+                        onDeleteDocument={handleDeleteDocument}
+                        file={file}
+                      />
+                      <Button size="icon" className="size-8 cursor-pointer">
+                        <RotateCcw />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

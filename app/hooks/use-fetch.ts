@@ -1,33 +1,32 @@
 import { useCallback, useState } from "react";
-import axios from "axios";
 
-const api = axios.create({
-  baseURL: "/api",
-});
+type HttpMethod = "GET" | "DELETE";
 
-export const useFetch = <T = unknown>(endpoint: string) => {
+export const useFetch = <T = unknown>(
+  endpoint: string,
+  httpMethod: HttpMethod = "GET"
+) => {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const fetch = useCallback(
-    async (params?: URLSearchParams) => {
-      try {
-        setIsLoading(true);
-        setHasError(false);
-        const response = await api.get<T>(endpoint, {
-          params,
-        });
-        setData(response.data);
-      } catch (err) {
-        console.error(err);
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [endpoint]
-  );
+  const doFetch = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setHasError(false);
+      const response = await fetch(`/api/${endpoint}`, {
+        method: httpMethod,
+      })
+        .then((response) => response.json())
+        .then((response) => ({ data: response }));
+      setData(response.data);
+    } catch (err) {
+      console.error(err);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [httpMethod, endpoint]);
 
-  return { data, isLoading, hasError, fetch };
+  return { data, isLoading, hasError, fetch: doFetch };
 };

@@ -3,13 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
-import {
-  Upload,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-  MessageCircle,
-} from "lucide-react";
+import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Link from "next/link";
 
 interface UploadedFile {
   name: string;
@@ -210,17 +203,6 @@ export function UploadDocuments() {
           </CardContent>
         </Card>
       </div>
-
-      {files.some((f) => f.status === "success") && (
-        <div className="mt-8 text-center">
-          <Link href="/chat">
-            <Button size="lg">
-              Start Chatting with Your Documents
-              <MessageCircle className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
