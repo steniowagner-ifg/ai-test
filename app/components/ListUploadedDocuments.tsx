@@ -2,10 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -19,6 +17,7 @@ import { DeleteDocumentButton } from "./DeleteDocumentButton";
 import { useFetch } from "../hooks/use-fetch";
 import { UploadedFile } from "../types";
 import { Spinner } from "./Spinner";
+import { ReplaceDocumentButton } from "./ReplaceDocumentButton";
 
 export function ListUploadedDocuments() {
   const [uploadedDocuments, setUploadedDocuments] = useState<UploadedFile[]>(
@@ -98,9 +97,10 @@ export function ListUploadedDocuments() {
                         onDeleteDocument={handleDeleteDocument}
                         file={file}
                       />
-                      <Button size="icon" className="size-8 cursor-pointer">
-                        <RotateCcw />
-                      </Button>
+                      <ReplaceDocumentButton
+                        onReplaceDocument={() => {}}
+                        file={file}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

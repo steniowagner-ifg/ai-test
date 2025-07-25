@@ -105,7 +105,6 @@ export function UploadDocuments() {
           Upload your documents to build your knowledge base
         </p>
       </div>
-
       <div className="grid lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
