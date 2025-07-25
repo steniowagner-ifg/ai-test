@@ -4,6 +4,7 @@ export type UploadedFile = {
   metadata: {
     filename: string;
     uploadedAt: string;
+    updatedAt?: string;
   };
   createdOn: string;
   updatedOn: string;

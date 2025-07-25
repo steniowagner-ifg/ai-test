@@ -136,16 +136,18 @@ export const ReplaceDocumentButton = (params: ReplaceDocumentButtonParams) => {
               id="file-upload"
             />
             <label htmlFor="file-upload">
-              <Button asChild className="cursor-pointer" disabled={isLoading}>
-                {isLoading ? (
+              {isLoading ? (
+                <Button className="cursor-pointer" disabled={isLoading}>
                   <>
                     <span>Replacing document...</span>
                     <Loader2Icon className="animate-spin" />
                   </>
-                ) : (
+                </Button>
+              ) : (
+                <Button asChild className="cursor-pointer" disabled={isLoading}>
                   <span>Choose file</span>
-                )}
-              </Button>
+                </Button>
+              )}
             </label>
           </div>
           <Alert className="mt-4">

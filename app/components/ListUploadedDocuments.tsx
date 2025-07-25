@@ -13,11 +13,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { ReplaceDocumentButton } from "./ReplaceDocumentButton";
 import { DeleteDocumentButton } from "./DeleteDocumentButton";
 import { useFetch } from "../hooks/use-fetch";
 import { UploadedFile } from "../types";
 import { Spinner } from "./Spinner";
-import { ReplaceDocumentButton } from "./ReplaceDocumentButton";
 
 export function ListUploadedDocuments() {
   const [uploadedDocuments, setUploadedDocuments] = useState<UploadedFile[]>(
@@ -27,7 +27,7 @@ export function ListUploadedDocuments() {
   const { fetch, data, isLoading, hasError } = useFetch<{
     files: UploadedFile[];
   }>("/list-documents");
-
+  console.log(data);
   const handleDeleteDocument = useCallback(async (file: UploadedFile) => {
     toast.success("File deleted successfully.");
     setUploadedDocuments((previousUploadedDocuments) =>
@@ -77,6 +77,7 @@ export function ListUploadedDocuments() {
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Uploaded At</TableHead>
+              <TableHead>Updated At</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,6 +91,14 @@ export function ListUploadedDocuments() {
                       parseISO(file.metadata.uploadedAt),
                       "dd/MM/yyyy HH:mm"
                     )}
+                  </TableCell>
+                  <TableCell>
+                    {file.metadata.updatedAt
+                      ? format(
+                          parseISO(file.metadata.updatedAt),
+                          "dd/MM/yyyy HH:mm"
+                        )
+                      : ""}
                   </TableCell>
                   <TableCell className="flex items-center justify-end">
                     <div className="self-end flex flex gap-2">
